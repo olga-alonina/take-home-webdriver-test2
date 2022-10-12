@@ -7,7 +7,6 @@ import org.openqa.selenium.support.PageFactory;
 
 public class DynamicControlsPage {
     public DynamicControlsPage() {
-
         PageFactory.initElements(Driver.get(), this);
 
     }
@@ -18,6 +17,9 @@ public class DynamicControlsPage {
 
     @FindBy(id = "message")
     public WebElement text1;
+
+    @FindBy(css = "[src='/img/ajax-loader.gif']")
+    public WebElement loadLine;
 
     @FindBy(css = "[onclick='swapInput()']")
     public WebElement enableButton;

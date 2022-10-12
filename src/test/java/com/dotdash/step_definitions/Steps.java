@@ -146,13 +146,16 @@ public class Steps extends Hooks {
     public void uses_explicit_wait() {
         wait = new WebDriverWait(Driver.get(), 75);
 
+
     }
 
     @Then("verify that the checkbox {string}")
     public void verify_that_the_checkbox(String status) {
-        wait.until(ExpectedConditions.visibilityOf(dynamicControlsPage.text1));
+        wait.until(ExpectedConditions.invisibilityOf(dynamicControlsPage.loadLine));
+       wait.until(ExpectedConditions.visibilityOf(dynamicControlsPage.text1));
         if (!dynamicControlsPage.text1.getText().equals(status)) {
             dynamicControlsPage.click_on(keep);
+            wait.until(ExpectedConditions.invisibilityOf(dynamicControlsPage.loadLine));
         }
         Assert.assertEquals(dynamicControlsPage.text1.getText(), status);
 
@@ -165,6 +168,7 @@ public class Steps extends Hooks {
 
     @Then("asserts that {string} is displayed")
     public void asserts_that_is_displayed(String phrase) {
+        wait.until(ExpectedConditions.invisibilityOf(dynamicLoadingPage.loadLine));
         Assert.assertEquals(dynamicLoadingPage.textLoad.getText(), phrase);
     }
 

@@ -17,4 +17,8 @@ public class DynamicLoadingPage {
 
     @FindBy(css = "#finish h4")
     public WebElement textLoad;
+
+    @FindBy(css = "[src='/img/ajax-loader.gif']")
+    public WebElement loadLine;
+
 }
