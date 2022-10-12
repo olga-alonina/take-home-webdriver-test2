@@ -16,20 +16,20 @@ public class Hooks {
 
         @BeforeClass
         public void setup(String pageName) {
-            Driver.getDriver().get(ConfigurationReader.getProperty("baseUrl") + pageName);
-            Driver.getDriver().manage().window().maximize();
+            Driver.get().get(ConfigurationReader.getProperty("baseUrl") + pageName);
+            Driver.get().manage().window().maximize();
         }
 
         @AfterClass
         public void teardown(Scenario scenario) {
             if(scenario.isFailed()){
                 System.out.println("Test Failed");
-                byte[] screenshot = ((TakesScreenshot)Driver.getDriver()).getScreenshotAs(OutputType.BYTES);
+                byte[] screenshot = ((TakesScreenshot)Driver.get()).getScreenshotAs(OutputType.BYTES);
                 scenario.attach(screenshot,"image/png", "screenFails");
             }else {
                 System.out.println("Cleanup!");
                 System.out.println("Test Completed");
             }
-            Driver.getDriver().quit();
+            Driver.get().quit();
         }
     }

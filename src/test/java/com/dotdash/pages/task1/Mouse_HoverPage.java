@@ -1,4 +1,4 @@
-package com.dotdash.pages;
+package com.dotdash.pages.task1;
 
 import com.dotdash.utilities.Driver;
 import org.openqa.selenium.WebElement;
@@ -12,7 +12,7 @@ public class Mouse_HoverPage {
     public List<String> actualNames;
 
     public Mouse_HoverPage() {
-        PageFactory.initElements(Driver.getDriver(), this);
+        PageFactory.initElements(Driver.get(), this);
     }
 
     @FindBy(tagName = "h5")

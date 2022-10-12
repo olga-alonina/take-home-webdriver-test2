@@ -1,4 +1,4 @@
-package com.dotdash.pages;
+package com.dotdash.pages.task1;
 
 import com.dotdash.utilities.Driver;
 import org.openqa.selenium.WebElement;
@@ -9,7 +9,7 @@ import java.util.*;
 
 public class CheckboxPage {
     public CheckboxPage() {
-        PageFactory.initElements(Driver.getDriver(), this);
+        PageFactory.initElements(Driver.get(), this);
     }
 
     @FindBy(xpath = "//input[@type='checkbox']")

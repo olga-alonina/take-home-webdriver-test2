@@ -1,6 +1,6 @@
 package com.dotdash.step_definitions;
 
-import com.dotdash.pages.*;
+import com.dotdash.pages.task1.*;
 import com.dotdash.utilities.*;
 import io.cucumber.java.en.*;
 import org.junit.Assert;
@@ -21,7 +21,7 @@ public class Steps extends Hooks {
     CheckboxPage checkboxPage = new CheckboxPage();
     ContextMenuPage contextMenuPage = new ContextMenuPage();
     Drag_DropPage drag_dropPage = new Drag_DropPage();
-    Actions actions = new Actions(Driver.getDriver());
+    Actions actions = new Actions(Driver.get());
     DropDownPage dropDownPage = new DropDownPage();
     DynamicContentPage dynamicContentPage = new DynamicContentPage();
     DynamicControlsPage dynamicControlsPage = new DynamicControlsPage();
@@ -82,7 +82,7 @@ public class Steps extends Hooks {
 
     @Then("user should be able to see alert menu")
     public void user_should_be_able_to_see_alert_menu() {
-        Alert alert = Driver.getDriver().switchTo().alert();
+        Alert alert = Driver.get().switchTo().alert();
         Assert.assertEquals("You selected a context menu", alert.getText());
         alert.accept();
 
@@ -129,9 +129,9 @@ public class Steps extends Hooks {
     @When("user refresh the page")
     public void user_refresh_the_page() {
         text1 = dynamicContentPage.firstElement.getText();
-        Driver.getDriver().navigate().refresh();
+        Driver.get().navigate().refresh();
         text2 = dynamicContentPage.firstElement.getText();
-        Driver.getDriver().navigate().refresh();
+        Driver.get().navigate().refresh();
         text3 = dynamicContentPage.firstElement.getText();
     }
 
@@ -144,7 +144,7 @@ public class Steps extends Hooks {
 
     @And("uses explicit wait")
     public void uses_explicit_wait() {
-        wait = new WebDriverWait(Driver.getDriver(), 75);
+        wait = new WebDriverWait(Driver.get(), 75);
 
     }
 
@@ -182,7 +182,7 @@ public class Steps extends Hooks {
 
     @When("clicks on {string}")
     public void clicks_on(String buttonName) {
-        System.out.println("=>" + Driver.getDriver().getCurrentUrl());
+        System.out.println("=>" + Driver.get().getCurrentUrl());
         file_uploadPage.click_on(buttonName);
 
     }
@@ -204,7 +204,7 @@ public class Steps extends Hooks {
 
     @When("user type text inside iframe {string}")
     public void user_type_text_inside_iframe(String text) {
-        Driver.getDriver().switchTo().frame(iframePage.iframe);
+        Driver.get().switchTo().frame(iframePage.iframe);
         iframePage.textInIframe.clear();
         textIframe = text;
         iframePage.textInIframe.sendKeys(textIframe);
@@ -266,11 +266,11 @@ public class Steps extends Hooks {
 
     @Then("asserts that a new tab is opened with text {string}")
     public void asserts_that_a_new_tab_is_opened_with_text_new_window(String text) {
-        String currentTab = Driver.getDriver().getWindowHandle();
-        Set<String> allTabs = Driver.getDriver().getWindowHandles();
+        String currentTab = Driver.get().getWindowHandle();
+        Set<String> allTabs = Driver.get().getWindowHandles();
         for (String eachTab : allTabs) {
             if (!eachTab.equalsIgnoreCase(currentTab)) {
-                Driver.getDriver().switchTo().window(eachTab);
+                Driver.get().switchTo().window(eachTab);
             }
         }
         Assert.assertEquals(new_tabPages.textNewWindow.getText(), text);

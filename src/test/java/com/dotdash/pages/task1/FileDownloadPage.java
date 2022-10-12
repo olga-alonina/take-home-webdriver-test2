@@ -1,4 +1,4 @@
-package com.dotdash.pages;
+package com.dotdash.pages.task1;
 
 import com.dotdash.utilities.Driver;
 import org.openqa.selenium.WebElement;
@@ -7,7 +7,7 @@ import org.openqa.selenium.support.PageFactory;
 
 public class FileDownloadPage {
     public FileDownloadPage() {
-        PageFactory.initElements(Driver.getDriver(), this);
+        PageFactory.initElements(Driver.get(), this);
     }
 
     @FindBy(css = "[href='download/some-file.txt']")

@@ -24,7 +24,7 @@ public class methods {
                         "dragstart',src);emit('dragenter',tgt);emit('dragover',tgt);emit(" +
                         "'drop',tgt);emit('dragend',src);";
 
-        ((JavascriptExecutor) Driver.getDriver()).executeScript(java_script, source, target);
+        ((JavascriptExecutor) Driver.get()).executeScript(java_script, source, target);
     }
 
     public static int countFilesInFolder() {
@@ -34,7 +34,7 @@ public class methods {
     }
 
     public static boolean JSLogsInfoTest(String expectedErrorMsg) {
-        LogEntries logEntries = Driver.getDriver().manage().logs().get(LogType.BROWSER);
+        LogEntries logEntries = Driver.get().manage().logs().get(LogType.BROWSER);
         for (LogEntry entry : logEntries) {
             if (entry.getMessage().contains(expectedErrorMsg)) {
                 return true;

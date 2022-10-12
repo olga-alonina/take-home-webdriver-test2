@@ -1,14 +1,13 @@
-package com.dotdash.pages;
+package com.dotdash.pages.task1;
 
 import com.dotdash.utilities.Driver;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 public class File_UploadPage {
     public File_UploadPage() {
-        PageFactory.initElements(Driver.getDriver(), this);
+        PageFactory.initElements(Driver.get(), this);
     }
 
     @FindBy(id = "file-submit")

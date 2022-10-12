@@ -1,80 +1,119 @@
 package com.dotdash.utilities;
 
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-
-import java.util.concurrent.TimeUnit;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.safari.SafariDriver;
 
 public class Driver {
-
-    /*
-     Creating the private constructor so this class' object
-     is not reachable from outside
-      */
-    private Driver() {
-    }
-
-    /*
-    Making our 'driver' instance private so that it is not reachable from outside of the class.
-    We make it static, because we want it to run before everything else, and also we will use it in a static method
-     */
     private static ThreadLocal<WebDriver> driverPool = new ThreadLocal<>();
 
-    /*
-    Creating re-usable utility method that will return same 'driver' instance everytime we call it.
-     */
-    public static WebDriver getDriver() {
+    private Driver() {
 
+    }
+
+    public static WebDriver get() {
+        //if this thread doesn't have a web driver yet - create it and add to pool
         if (driverPool.get() == null) {
-
-            synchronized (Driver.class) {
-            /*
-            We read our browser type from configuration.properties file using
-            .getProperty method we creating in ConfigurationReader class.
-             */
-                String browserType = ConfigurationReader.getProperty("browser");
-
-            /*
-            Depending on the browser type our switch statement will determine
-            to open specific type of browser/driver
-             */
-                switch (browserType) {
-                    case "chrome":
-                        WebDriverManager.chromedriver().setup();
-                        driverPool.set(new ChromeDriver());
-                        driverPool.get().manage().window().maximize();
-                        driverPool.get().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-                        break;
-                    case "firefox":
-                        WebDriverManager.firefoxdriver().setup();
-                        driverPool.set(new FirefoxDriver());
-                        driverPool.get().manage().window().maximize();
-                        driverPool.get().manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
-                        break;
-                }
+            System.out.println("TRYING TO CREATE DRIVER");
+            // this line will tell which browser should open based on the value from properties file
+            String browserParamFromEnv = System.getProperty("browser");
+            String browser = browserParamFromEnv == null ? ConfigurationReader.getProperty("browser") : browserParamFromEnv;
+            switch (browser) {
+                case "chrome":
+                    WebDriverManager.chromedriver().setup();
+                    driverPool.set(new ChromeDriver());
+                    break;
+                case "chrome_headless":
+                    WebDriverManager.chromedriver().setup();
+                    driverPool.set(new ChromeDriver(new ChromeOptions().setHeadless(true)));
+                    break;
+                case "firefox":
+                    WebDriverManager.firefoxdriver().setup();
+                    driverPool.set(new FirefoxDriver());
+                    break;
+                case "firefox_headless":
+                    WebDriverManager.firefoxdriver().setup();
+                    driverPool.set(new FirefoxDriver(new FirefoxOptions().setHeadless(true)));
+                    break;
+                case "ie":
+                    if (!System.getProperty("os.name").toLowerCase().contains("windows")) {
+                        throw new WebDriverException("Your OS doesn't support Internet Explorer");
+                    }
+                    WebDriverManager.iedriver().setup();
+                    driverPool.set(new InternetExplorerDriver());
+                    break;
+                case "edge":
+                    if (!System.getProperty("os.name").toLowerCase().contains("windows")) {
+                        throw new WebDriverException("Your OS doesn't support Edge");
+                    }
+                    WebDriverManager.edgedriver().setup();
+                    driverPool.set(new EdgeDriver());
+                    break;
+                case "safari":
+                    if (!System.getProperty("os.name").toLowerCase().contains("mac")) {
+                        throw new WebDriverException("Your OS doesn't support Safari");
+                    }
+                    WebDriverManager.getInstance(SafariDriver.class).setup();
+                    driverPool.set(new SafariDriver());
+                    break;
             }
-        }
 
-        /*
-        Same driver instance will be returned every time we call Driver.getDriver(); method
-         */
+        }
+        //return corresponded to thread id webdriver object
         return driverPool.get();
-
-
     }
-
-    /*
-    This method makes sure we have some form of driver sesion or driver id has.
-    Either null or not null it must exist.
-     */
-    public static void closeDriver() {
-        if (driverPool.get() != null) {
-            driverPool.get().quit();
-            driverPool.remove();
+    public static void set(String browser) {
+        switch (browser) {
+            case "chrome":
+                WebDriverManager.chromedriver().setup();
+                driverPool.set(new ChromeDriver());
+                break;
+            case "chrome_headless":
+                WebDriverManager.chromedriver().setup();
+                driverPool.set(new ChromeDriver(new ChromeOptions().setHeadless(true)));
+                break;
+            case "firefox":
+                WebDriverManager.firefoxdriver().setup();
+                driverPool.set(new FirefoxDriver());
+                break;
+            case "firefox_headless":
+                WebDriverManager.firefoxdriver().setup();
+                driverPool.set(new FirefoxDriver(new FirefoxOptions().setHeadless(true)));
+                break;
+            case "ie":
+                if (!System.getProperty("os.name").toLowerCase().contains("windows")) {
+                    throw new WebDriverException("Your OS doesn't support Internet Explorer");
+                }
+                WebDriverManager.iedriver().setup();
+                driverPool.set(new InternetExplorerDriver());
+                break;
+            case "edge":
+                if (!System.getProperty("os.name").toLowerCase().contains("windows")) {
+                    throw new WebDriverException("Your OS doesn't support Edge");
+                }
+                WebDriverManager.edgedriver().setup();
+                driverPool.set(new EdgeDriver());
+                break;
+            case "safari":
+                if (!System.getProperty("os.name").toLowerCase().contains("mac")) {
+                    throw new WebDriverException("Your OS doesn't support Safari");
+                }
+                WebDriverManager.getInstance(SafariDriver.class).setup();
+                driverPool.set(new SafariDriver());
+                break;
         }
     }
 
+
+    public static void close() {
+        driverPool.get().quit();
+        driverPool.remove();
+    }
 }
