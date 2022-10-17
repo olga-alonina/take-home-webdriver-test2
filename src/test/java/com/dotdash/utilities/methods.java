@@ -1,7 +1,9 @@
 package com.dotdash.utilities;
 
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
@@ -9,6 +11,8 @@ import org.openqa.selenium.logging.LogType;
 
 import java.io.File;
 import java.util.Objects;
+
+import static java.lang.Character.*;
 
 
 public class methods {
@@ -41,6 +45,48 @@ public class methods {
             }
         }
         return false;
+    }
+
+    public static void calcButtons(char number) {
+        if (number == '.' || number == '+' || number == '÷' || number == '×' || number == '−' || number == '=') {
+            Driver.get().findElement(By.xpath("//table[@class='ElumCf']//div//div[.=" + "\"" + number + "\"" + "]")).click();
+        } else {
+            Driver.get().findElement(By.xpath("//table[@class='ElumCf']//div//div[.=" + number + "]")).click();
+        }
+    }
+
+    public static void actions(String action) {
+        //setup
+        Driver.get().get("https://www.google.com");
+        Driver.get().findElement(By.cssSelector("[class='gLFyf gsfi']")).sendKeys("calculator" + Keys.ENTER);
+        String temp2 = "";
+        int shrink = 0;
+        char[] temp = action.toCharArray();
+        for (Character each : temp) {
+            if (isLetter(each)) {
+                switch (each) {
+                    case 'C':
+                    case 'E':
+                    case 'A':
+                        temp2 += each;
+                        if (temp2.length() == 2 && (temp2.equals("AC") || temp2.equals("CE"))) {
+                            Driver.get().findElement(By.cssSelector("[jsname='H7sWPd']")).click();
+                            temp2 = "";
+                            shrink++;
+                        }
+                }
+            } else {
+                calcButtons(each);
+            }
+        }
+        calcButtons('=');
+        String result = Driver.get().findElement(By.cssSelector("[jsname='VssY5c']")).getText();
+        Integer numResult = Integer.parseInt(result);
+        if (action.contains("AC") || action.contains("CE")) {
+            Assert.assertEquals((action.length() - (shrink*2L+shrink)), result.length());
+            System.out.println("shrink works normally");
+        }
+        System.out.println(action + " = " + numResult);
     }
 }
 

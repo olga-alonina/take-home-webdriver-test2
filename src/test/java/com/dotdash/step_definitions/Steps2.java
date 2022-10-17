@@ -1,8 +1,8 @@
 package com.dotdash.step_definitions;
 
-import com.dotdash.pages.FirstPage;
-import com.dotdash.pages.SecondPage;
-import com.dotdash.pages.ThirdPage;
+import com.dotdash.pages.Lina.FirstPage;
+import com.dotdash.pages.Lina.SecondPage;
+import com.dotdash.pages.Lina.ThirdPage;
 import com.dotdash.utilities.Driver;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;

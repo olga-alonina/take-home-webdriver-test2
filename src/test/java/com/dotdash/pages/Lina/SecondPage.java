@@ -1,4 +1,4 @@
-package com.dotdash.pages;
+package com.dotdash.pages.Lina;
 
 import com.dotdash.utilities.Driver;
 import org.openqa.selenium.WebElement;
