@@ -48,8 +48,14 @@ public class methods {
     }
 
     public static void calcButtons(char number) {
-        if (number == '.' || number == '+' || number == '÷' || number == '×' || number == '−' || number == '=') {
+        if (number == '.' || number == '+' || number == '=') {
             Driver.get().findElement(By.xpath("//table[@class='ElumCf']//div//div[.=" + "\"" + number + "\"" + "]")).click();
+        } else if (number == '÷' || number == '/') {
+            Driver.get().findElement(By.xpath("//table[@class='ElumCf']//div//div[.='÷']")).click();
+        } else if (number == '×' || number == '*') {
+            Driver.get().findElement(By.xpath("//table[@class='ElumCf']//div//div[.='×']")).click();
+        } else if (number == '−' || number == '-') {
+            Driver.get().findElement(By.xpath("//table[@class='ElumCf']//div//div[.='−']")).click();
         } else {
             Driver.get().findElement(By.xpath("//table[@class='ElumCf']//div//div[.=" + number + "]")).click();
         }
@@ -59,11 +65,14 @@ public class methods {
         //setup
         Driver.get().get("https://www.google.com");
         Driver.get().findElement(By.cssSelector("[class='gLFyf gsfi']")).sendKeys("calculator" + Keys.ENTER);
+        //split action string to numbers and actions
+        String total = "";
         String temp2 = "";
         int shrink = 0;
         char[] temp = action.toCharArray();
         for (Character each : temp) {
             if (isLetter(each)) {
+                //declare clear button
                 switch (each) {
                     case 'C':
                     case 'E':
@@ -74,19 +83,35 @@ public class methods {
                             temp2 = "";
                             shrink++;
                         }
+                        break;
+                    case 'x':
+                    case 'X':
+                        Driver.get().findElement(By.xpath("//table[@class='ElumCf']//div//div[.='×']")).click();
+                        break;
                 }
+
             } else {
+                //numbers and actions
                 calcButtons(each);
             }
         }
+        //summarize
         calcButtons('=');
         String result = Driver.get().findElement(By.cssSelector("[jsname='VssY5c']")).getText();
-        Integer numResult = Integer.parseInt(result);
-        if (action.contains("AC") || action.contains("CE")) {
-            Assert.assertEquals((action.length() - (shrink*2L+shrink)), result.length());
-            System.out.println("shrink works normally");
+        char[] tempResult = result.toCharArray();
+        for (Character each1 : tempResult) {
+            if (isLetter(each1)) {
+                total = action + " = " + result;
+            } else {
+                Integer numResult = Integer.parseInt(result);
+                if (action.contains("AC") || action.contains("CE")) {
+                    Assert.assertEquals((action.length() - (shrink * 2L + shrink)), result.length());
+                    System.out.println("shrink works normally");
+                }
+                total = action + " = " + numResult;
+            }
         }
-        System.out.println(action + " = " + numResult);
+        System.out.println(total);
     }
 }
 
